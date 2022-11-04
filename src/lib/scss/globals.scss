@@ -1,0 +1,24 @@
+.plr-ctrl-button {
+	width: 100%;
+	height: 100%;
+	border: none;
+	background-color: transparent;
+	padding: 0;
+	cursor: pointer;
+	outline: 0;
+	&:focus {
+		outline: 0;
+	}
+}
+
+.html5-video-player svg {
+	pointer-events: none;
+}
+
+.plr-svg-fill {
+	fill: #fff;
+}
+
+.hide {
+	opacity: 0;
+}
