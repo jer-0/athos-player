@@ -7,8 +7,8 @@
         -webkit-box-sizing: border-box;
         box-sizing: border-box;
         margin: 12px auto;
-        width: 32px;
-        height: 32px;
+        width: 80px;
+        height: 80px;
         -webkit-border-radius: 50%;
         border-radius: 50%;
         border: 2px solid #eee;

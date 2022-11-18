@@ -46,20 +46,27 @@
 	@use '../../scss/vars' as var;
 
 	plr-shorts-controls {
-		display: flex;
-		flex-direction: column;
-		position: absolute;
-		top: 0;
-		right: 0;
-		left: 0;
-		bottom: 0;
+		display: grid;
+		grid-template-columns: 1fr;
+    grid-template-rows: repeat(3,minmax(0, 1fr));
+		// display: flex;
+		// flex-direction: column;
+		// position: absolute;
+		// top: 0;
+		// right: 0;
+		// left: 0;
+		// bottom: 0;
 		height: 100%;
 		width: 100%;
+		z-index: 2;
 	}
 
 	.play-button {
-		width: 60px;
+		grid-row-start: 2;
+    grid-row-end: 3;
+    align-self: center;
 		justify-content: center;
+		width: 60px;
 		margin: auto;
 		background: rgba(0, 0, 0, 0.5);
 		border: 1px solid transparent;

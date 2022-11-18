@@ -37,10 +37,10 @@
 
 <style lang="scss">
   .bottom-container {
-    position: absolute;
+    grid-row-start: 3;
+    grid-row-end: 4;
+    align-self: flex-end;
     width: 100%;
-    bottom: 0;
-    left: 0;
     height: auto;
     background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.65));
   }

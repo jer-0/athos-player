@@ -12,11 +12,11 @@
 
 <style lang="scss">
     .plr-center-spinner {
-        position: absolute;
-        top: 50%;
-        width: 100%;
+        // position: absolute;
+        // top: 50%;
+        // width: 100%;
         display: flex;
-        align-items: center;
-        transform: translateY(-50%);
+        // align-items: center;
+        // transform: translateY(-50%);
     }
 </style>

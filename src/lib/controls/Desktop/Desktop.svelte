@@ -110,30 +110,21 @@
 	@use '../../scss/vars' as var;
 
 	plrd-controls {
-		position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
+		display: flex;
     height: 100%;
     width: 100%;
+		z-index: 2;
 	}
 
 	.plrd-controls {
-		display: flex;
-		flex-direction: column;
-		justify-content: flex-end;
-		position: absolute;
-		top: 0;
-		right: 0;
-		left: 0;
-		bottom: 0;
+		display: grid;
+		grid-template-columns: 1fr;
+    grid-template-rows: repeat(3,minmax(0,1fr));
 		height: 100%;
 		width: 100%;
 		opacity: 1;
 		transition: opacity .1s cubic-bezier(0.4,0.0,1,1);
 		background: transparent;
-		// z-index: map-get(var.$z-index, "plrd-controls")
 	}
 
 	.plrd-controls.hide-controls {

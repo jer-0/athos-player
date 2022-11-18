@@ -45,10 +45,17 @@
 	}
 
 	.html5-video-player {
-		display: flex;
-		justify-content: center;
-		position: relative;
+		// display: flex;
+		// justify-content: center;
+		// position: relative;
+		display: grid;
+		place-items: center;
+		isolation: isolate;
 		width: 100%;
 		height: 100%;
+	}
+	:global(.html5-video-player > *) {
+		grid-column: 1 / -1;
+		grid-row: 1 / -1;
 	}
 </style>

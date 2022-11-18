@@ -24,5 +24,6 @@
   .clip {
     aspect-ratio: 9/16;
     height: 70vh;
+    width: auto;
   }
 </style>

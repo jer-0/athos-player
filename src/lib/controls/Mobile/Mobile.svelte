@@ -90,11 +90,14 @@
     --ctrl-button-width: 35px;
     --ctrl-button-height: 35px;
     display: grid;
-		position: absolute;
+		// position: absolute;
+    width: 100%;
+    height: 100%;
 		top: 0;
 		right: 0;
 		left: 0;
 		bottom: 0;
+    z-index: 2;
     background: rgba(0,0,0,0);
     transition-property: background-color;
     transition-duration: 0.7s;
@@ -111,8 +114,7 @@
     min-height: 0;
     padding: 10px;
     opacity: 1;
-    height: -webkit-fill-available;
-    height: fill-available;
+    height: 100%;
 
     &.hide-controls {
       opacity: 0;

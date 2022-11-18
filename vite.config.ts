@@ -11,6 +11,10 @@ export default defineConfig({
   resolve: {
     alias: {
       '$types': path.resolve('./src/types')
-    }
-  }
+    },
+  },
+  build: {
+		target: 'es2017',
+		cssTarget: 'chrome58'
+	},
 })
