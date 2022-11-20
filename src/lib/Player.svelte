@@ -10,7 +10,6 @@
 	export let videoMode: VideoMode = 'active'
 
 	import { onMount, onDestroy } from 'svelte'
-	import { isSupported as isMediaSourceSupported } from 'hls.js/src/is-supported'
 
 	// components 
 	import Vast from './vast/Vast.svelte'
@@ -67,11 +66,7 @@
 	// controls bind
 	let controls: DesktopControls | MobileControls | ShortControls
 
-	// Hls
-	// let Hls
 	let hls: HlsType | undefined
-	let nativeHlsSupport = false
-	let mediaSourceSupport = false
 
 	function reset() {
 		paused = true
@@ -105,64 +100,54 @@
 	}
 
 	function attachHlsSrc() {
+		if (!$Hls) throw new Error(`$Hls is typeof ${typeof $Hls}`)
+
 		if (hls) {
 			videoElement.pause()
 			hls.detachMedia()
 			hls.destroy()
 		} 
 
-		hls = new $Hls()
+		hls = new $Hls!()
 
 		hls.loadSource(videoSrc)
 		hls.on($Hls.Events.MANIFEST_PARSED, () => {
-			hls?.attachMedia(videoElement)
+			hls!.attachMedia(videoElement)
 		})
 		hls.on($Hls.Events.MEDIA_ATTACHED, () => {
 			attached = true
 		})
 	}
 
-	$: if (videoSrc && mounted && videoElement) {
+	$: if (videoSrc && mounted) {
 		attached = false
-		if (mediaSourceSupport) {
-			attachHlsSrc()
-		} else if (nativeHlsSupport) {
+		if ($hlsSupport!.mediaSource) {
+			if ($Hls) {
+				attachHlsSrc()
+			}
+		} else if ($hlsSupport!.native) {
 			attached = true
 		}
 		reset()
 	}
 
-	onMount(async () => {
-		if (!$hlsSupport.mediaSourceSupport && !$hlsSupport.nativeHlsSupport) {
-			if (isMediaSourceSupported()) {
-				hlsSupport.set({
-					nativeHlsSupport: false,
-					mediaSourceSupport: true
-				})
-				await Hls.initialize()
-
-			// } else if (nativeHlsTestVideoElement.canPlayType('application/vnd.apple.mpegurl')) {
-			} else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
-				hlsSupport.set({
-					nativeHlsSupport: true,
-					mediaSourceSupport: false
-				})
-			}  else {
-				console.log('MediaSource nor native hls support found.')
-			}
+	onMount(() => {
+		if (!$hlsSupport) {
+			hlsSupport.setSupport(videoElement)
 		}
-
-		if ($hlsSupport.mediaSourceSupport) {
-			mediaSourceSupport = true
-		} else if ($hlsSupport.nativeHlsSupport) {
-			nativeHlsSupport = true
+		if ($hlsSupport!.mediaSource) {
+			if (!$Hls) {
+				Hls.initialize()
+			}
+		} else if ($hlsSupport!.native) {
+			
 		}
 		mounted = true
 	})
 
 	onDestroy(() => {
-		if(mediaSourceSupport) {
-			hls?.destroy()
+		if(hls) {
+			hls.destroy()
 		}
 	})
 </script>
@@ -302,7 +287,4 @@
 	.native-hls-test-video {
 		display: none;
 	}
-	// :global(.plr-center-spinner.plrd-center-spinner) {
-	//     z-index: map-get(var.$z-index, "plrd-center-spinner")
-	// }
 </style>
