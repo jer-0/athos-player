@@ -22,14 +22,14 @@
   }
 </script>
 
-<!-- <main>
+<main>
   <Player 
 		videoSrc={src}
     controlsType={'desktop'}
 	/>
-</main> -->
+</main>
 
-<main class="clip">
+<!-- <main class="clip">
   <Player 
 		videoSrc={src}
     controlsType={'minimal'}
@@ -38,12 +38,12 @@
 		videoSrc={video2}
     controlsType={'minimal'}
 	/>
-</main>
+</main> -->
 
-<div class="controls">
+<!-- <div class="controls">
   <button on:click={changeSrc}>Change src</button>
   <button on:click={multiplePlayer}>Multiple Players</button> 
-</div>
+</div> -->
 
 <style>
   main {

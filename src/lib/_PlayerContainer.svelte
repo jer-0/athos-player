@@ -53,6 +53,7 @@
 		isolation: isolate;
 		width: 100%;
 		height: 100%;
+		grid-template-rows: max-content 1fr max-content;
 	}
 	:global(.html5-video-player > *) {
 		grid-column: 1 / -1;
