@@ -2,12 +2,35 @@
 	import type VideoAtr from '$types/video'
 	import type HlsType from 'hls.js'
 
+	interface Config {
+		readonly autoplay: VideoAtr.Autoplay
+		/** if poster should behave like frame0 */
+		readonly frame0poster: boolean
+		readonly loop: VideoAtr.Loop
+		readonly	objectFit: ObjectFit
+	}
+
+	const defaultConfig: Config = {
+		autoplay: false,
+		frame0poster: false,
+		loop: false,
+		objectFit: 'contain'
+	}
+
+	let userConfig: Partial<Config> = {} 
+
+	export { userConfig as config }
 	export let videoSrc: string
 	export let posterUrl: string | null = null
 	export let prerollUrl: string | null = null
 	export let playAd: boolean = true
 	export let controlsType: 'minimal' | 'desktop' | 'mobile' = 'desktop'
 	export let videoMode: VideoMode = 'active'
+
+	const config: Config = {
+		...defaultConfig,
+		...userConfig
+	} 
 
 	import { onMount, onDestroy } from 'svelte'
 
@@ -44,8 +67,6 @@
 	let metadataLoaded: VideoAtr.MetadataLoaded
 	let buffering: VideoAtr.Buffering
 	let toPause: boolean
-	export let loop: VideoAtr.Loop = false
-	export let autoplay: VideoAtr.Autoplay = false
 
 	let attached: boolean
 
@@ -158,7 +179,8 @@
 >   
 	<div slot="video" class="html5-video-container">
 		<Video
-			{autoplay}
+			autoplay={config.autoplay}
+			objectFit={config.objectFit}
 			{attached}
 			{videoMode}
 			src={videoSrc}
@@ -171,7 +193,7 @@
 			bind:metadataLoaded
 			bind:buffering
 			bind:toPause
-			bind:loop
+			bind:loop={config.loop}
 			on:play={onPlay}
 		/>
 	</div>
@@ -179,7 +201,12 @@
 	<CenterSpinner class="plrd-center-spinner" active={buffering || !attached}/>
 
 	{#if posterUrl}
-		<ThumbnailOverlay visable={initPlay} posterUrl={posterUrl}/>
+		<ThumbnailOverlay 
+			posterUrl={posterUrl}
+			visable={initPlay || config.frame0poster} 
+			frame0={config.frame0poster}
+			objectFit={config.objectFit}
+		/>
 	{/if}
 
 	{#if videoElement && attached}

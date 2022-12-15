@@ -26,6 +26,7 @@
   <Player 
 		videoSrc={src}
     controlsType={'desktop'}
+    posterUrl={'https://static.sadio.li/videos/2021/5/QQMl17XK6Me/thumbnails/thumb-small.jpg'}
 	/>
 </main>
 
@@ -37,6 +38,7 @@
   <Player 
 		videoSrc={video2}
     controlsType={'minimal'}
+    posterUrl={"https://static.sadio.li/videos/2021/12/bonnlvfPPxC/frame0.jpg"}
 	/>
 </main> -->
 

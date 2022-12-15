@@ -17,6 +17,7 @@
 	export let autoplay: Video.Autoplay = false
 	export let attached: boolean = false
 	export let videoMode: VideoMode
+	export let objectFit: objectFit = 'contain'
 
 	// $: playing = !paused && !ended && videoElement.readyState === 4
 	$: playing = !paused && !ended
@@ -139,6 +140,7 @@
 	on:canplay={onCanPlay}
 	on:loadedmetadata={onLoadedmetadata} 
 	on:ended
+	style:object-fit={objectFit}
 	>
 
 	<track kind="captions" />
