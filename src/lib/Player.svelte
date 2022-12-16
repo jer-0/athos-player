@@ -6,6 +6,8 @@
 		readonly autoplay: VideoAtr.Autoplay
 		/** if poster should behave like frame0 */
 		readonly frame0poster: boolean
+		/** which element to set poster on */
+		readonly posterElement: 'video' | 'overlay'
 		readonly loop: VideoAtr.Loop
 		readonly	objectFit: ObjectFit
 	}
@@ -13,6 +15,7 @@
 	const defaultConfig: Config = {
 		autoplay: false,
 		frame0poster: false,
+		posterElement: 'video',
 		loop: false,
 		objectFit: 'contain'
 	}
@@ -21,8 +24,8 @@
 
 	export { userConfig as config }
 	export let videoSrc: string
-	export let posterUrl: string | null = null
-	export let prerollUrl: string | null = null
+	export let posterUrl: string | undefined = undefined
+	export let prerollUrl: string | undefined = undefined
 	export let playAd: boolean = true
 	export let controlsType: 'minimal' | 'desktop' | 'mobile' = 'desktop'
 	export let videoMode: VideoMode = 'active'
@@ -184,6 +187,7 @@
 			{attached}
 			{videoMode}
 			src={videoSrc}
+			poster={config.posterElement === 'video' ? posterUrl : undefined}
 			bind:this={video}
 			bind:videoElement
 			bind:paused
@@ -200,7 +204,7 @@
 
 	<CenterSpinner class="plrd-center-spinner" active={buffering || !attached}/>
 
-	{#if posterUrl}
+	{#if config.posterElement === 'overlay'  && posterUrl}
 		<ThumbnailOverlay 
 			posterUrl={posterUrl}
 			visable={initPlay || config.frame0poster} 

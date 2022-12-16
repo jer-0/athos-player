@@ -3,8 +3,8 @@
 	import { tick } from 'svelte'
 	import volume from '../../store/volume'
 
-	export let src: Video.Src = ''
-	export let poster: Video.Poster = ''
+	export let src: Video.Src
+	export let poster: Video.Poster | undefined
 	export let videoElement: HTMLVideoElement
 	export let paused: Video.Paused = true
 	export let duration: Video.Duration = 0
@@ -17,7 +17,7 @@
 	export let autoplay: Video.Autoplay = false
 	export let attached: boolean = false
 	export let videoMode: VideoMode
-	export let objectFit: objectFit = 'contain'
+	export let objectFit: ObjectFit = 'contain'
 
 	// $: playing = !paused && !ended && videoElement.readyState === 4
 	$: playing = !paused && !ended
