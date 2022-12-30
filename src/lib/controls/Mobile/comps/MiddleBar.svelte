@@ -27,7 +27,7 @@
   }
 
   .middle-bar :global(.plr-play-ctrl-button) {
-    width: 56px;
-    height: 56px;
+    width: 45px;
+    height: 45px;
   }
 </style>

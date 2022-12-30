@@ -1,19 +1,18 @@
 <script lang="ts">
 	import type VideoAtr from '$types/video'
+	import type { VideoConfig } from '$types/video'
 	import type HlsType from 'hls.js'
 
-	interface Config {
-		readonly autoplay: VideoAtr.Autoplay
+	interface Config extends VideoConfig {
 		/** if poster should behave like frame0 */
 		readonly frame0poster: boolean
 		/** which element to set poster on */
 		readonly posterElement: 'video' | 'overlay'
-		readonly loop: VideoAtr.Loop
-		readonly	objectFit: ObjectFit
 	}
 
 	const defaultConfig: Config = {
 		autoplay: false,
+		forceAutoPlay: false,
 		frame0poster: false,
 		posterElement: 'video',
 		loop: false,
@@ -44,7 +43,7 @@
 	import ProgressBar from './comps/ProgressBar/ProgressBar.svelte'
 	import DesktopControls from './controls/Desktop/Desktop.svelte'
 	import MobileControls from './controls/Mobile/Mobile.svelte'
-	import ShortControls from './controls/Minimal/Shorts.svelte'
+	import MinimalControls from './controls/Minimal/Minimal.svelte'
 	import Fullscreen from './comps/Fullscreen/Fullscreen.svelte'
 	import CenterSpinner from './comps/Loading/CenterSpinner.svelte'
 	import ThumbnailOverlay from './comps/ThumbnailOverlay/ThumbnailOverlay.svelte'
@@ -88,7 +87,7 @@
 	let vast: Vast
 	
 	// controls bind
-	let controls: DesktopControls | MobileControls | ShortControls
+	let controls: DesktopControls | MobileControls | MinimalControls
 
 	let hls: HlsType | undefined
 
@@ -134,13 +133,15 @@
 
 		hls = new $Hls!()
 
-		hls.loadSource(videoSrc)
-		hls.on($Hls.Events.MANIFEST_PARSED, () => {
-			hls!.attachMedia(videoElement)
-		})
+		// hls.on($Hls.Events.MANIFEST_PARSED, () => {
+		// 	hls!.attachMedia(videoElement)
+		// })
 		hls.on($Hls.Events.MEDIA_ATTACHED, () => {
 			attached = true
 		})
+
+		hls.loadSource(videoSrc)
+		hls.attachMedia(videoElement)
 	}
 
 	$: if (videoSrc && mounted) {
@@ -164,7 +165,7 @@
 				Hls.initialize()
 			}
 		} else if ($hlsSupport!.native) {
-			
+			videoElement.load()
 		}
 		mounted = true
 	})
@@ -182,12 +183,16 @@
 >   
 	<div slot="video" class="html5-video-container">
 		<Video
-			autoplay={config.autoplay}
-			objectFit={config.objectFit}
 			{attached}
 			{videoMode}
 			src={videoSrc}
 			poster={config.posterElement === 'video' ? posterUrl : undefined}
+			config={{
+				autoplay: config.autoplay,
+				forceAutoPlay: config.forceAutoPlay,
+				loop: config.loop,
+				objectFit: config.objectFit
+			}}
 			bind:this={video}
 			bind:videoElement
 			bind:paused
@@ -197,7 +202,6 @@
 			bind:metadataLoaded
 			bind:buffering
 			bind:toPause
-			bind:loop={config.loop}
 			on:play={onPlay}
 		/>
 	</div>
@@ -281,15 +285,16 @@
 		</MobileControls>
 
 		{:else if controlsType === 'minimal'}
-			<ShortControls
+			<MinimalControls
 				{paused}
+				{muted}
 				{toPause}
-				{buffering}
 				bind:isControlsVisable
 				on:togglePlay={video.togglePlay}
 				on:pause={video.pauseVideo}
+				on:toggleMute={video.toggleMute}
 			>
-			</ShortControls>
+			</MinimalControls>
 		{/if}
 
 	{/if}

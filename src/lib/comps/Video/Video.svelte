@@ -1,7 +1,9 @@
 <script type="ts">
 	import type Video from '$types/video';
+	import type { VideoConfig } from '$types/video'
 	import { tick } from 'svelte'
 	import volume from '../../store/volume'
+	import autoPlayFailCheck from '../../utils/autoPlayFailCheck'
 
 	export let src: Video.Src
 	export let poster: Video.Poster | undefined
@@ -13,25 +15,36 @@
 	export let metadataLoaded: Video.MetadataLoaded = false
 	export let buffering: Video.Buffering = false
 	export let ended: Video.Ended = false
-	export let loop: Video.Loop = false
-	export let autoplay: Video.Autoplay = false
 	export let attached: boolean = false
 	export let videoMode: VideoMode
-	export let objectFit: ObjectFit = 'contain'
+	export let config: VideoConfig = {
+		autoplay: false,
+		forceAutoPlay: false,
+		loop: false,
+		objectFit: 'contain'
+	}
 
 	// $: playing = !paused && !ended && videoElement.readyState === 4
 	$: playing = !paused && !ended
 
-	$: if (videoElement && attached){
+	$: if (attached) {
 		if (videoMode === 'active') {
-			if (autoplay) playVideo()
+			if (config.autoplay) autoPlay()
 		} else {
 			pauseVideo()
 		}
 	}
 
-	export let toPause: boolean
-	let canPause: boolean
+	export let toPause: boolean = false
+	let canPause: boolean = true
+
+	async function autoPlay() {
+		const play = await playVideo()
+		if (videoElement && play === 'autoplay_fail' && config.forceAutoPlay) {
+			await mute()
+			await playVideo()
+		}	
+	}
 
 	export async function playVideo() {
 		try {
@@ -39,16 +52,24 @@
 			if (playing) return
 			canPause = false
 			await videoElement.play()
-			// canPause = true
+			return true
+		} 
+		catch (error) {
+			if (error instanceof Error) {
+				console.log(error.message)
+				if (config.forceAutoPlay && autoPlayFailCheck(error.message)) {
+					return 'autoplay_fail'
+				}
+			}
+			canPause = true
+			console.log(error)
+			return false
+		} 
+		finally {
 			if (toPause) {
 				videoElement.pause()
 				toPause = false
 			}
-			return true
-		} catch (error) {
-			canPause = true
-			console.log(error)
-			return false
 		}
 	}
 
@@ -117,12 +138,15 @@
 	}
 </script>
 
+<!-- 	autoplay={config.autoplay && videoMode === 'active'} -->
+
 <video
 	src={src}
 	poster={poster}
-	loop={loop}
-	preload="auto"
+	loop={config.loop}
+	preload="true"
 	playsinline
+
 	bind:this={videoElement}
 	bind:paused
 	bind:duration
@@ -140,7 +164,7 @@
 	on:canplay={onCanPlay}
 	on:loadedmetadata={onLoadedmetadata} 
 	on:ended
-	style:object-fit={objectFit}
+	style:object-fit={config.objectFit}
 	>
 
 	<track kind="captions" />

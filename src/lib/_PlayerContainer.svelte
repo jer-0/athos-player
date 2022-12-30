@@ -35,7 +35,7 @@
 		color: #fff;
 		font-size: var.$plr-font-size;
 		font-family: inherit;
-		background-color: #000;
+		// background-color: #000;
 	}
 
 	@media (max-width: 600px) {

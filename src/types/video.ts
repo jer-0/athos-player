@@ -13,3 +13,11 @@ namespace Video {
 }
 
 export default Video
+
+export interface VideoConfig {
+  readonly autoplay: Video.Autoplay,
+  /** muted autoplay if can't autoplay with sound */
+  readonly forceAutoPlay: boolean,
+  readonly objectFit: ObjectFit,
+  readonly loop: Video.Loop
+}

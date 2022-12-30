@@ -90,7 +90,6 @@
     --ctrl-button-width: 35px;
     --ctrl-button-height: 35px;
     display: grid;
-		// position: absolute;
     width: 100%;
     height: 100%;
 		top: 0;
@@ -108,7 +107,7 @@
 
   .plr-mobile-controls {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: 100%;
     grid-template-rows: repeat(3, minmax(0, 1fr));
     min-width: 0;
     min-height: 0;
